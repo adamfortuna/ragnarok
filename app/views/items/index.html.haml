@@ -1,0 +1,32 @@
+%h1 Listing items
+
+%table
+  %thead
+    %tr
+      %th Icon
+      %th Uid
+      %th Unique name
+      %th Name
+      %th Type
+      %th Subtype
+      %th Npc price
+      %th Slots
+      %th
+      %th
+      %th
+
+  %tbody
+    - @items.each do |item|
+      %tr
+        %td
+          %img{ src: item.icon }
+        %td= item.uid
+        %td= item.unique_name
+        %td= item.name
+        %td= item.item_type
+        %td= item.item_subtype
+        %td= item.npc_price
+        %td= item.slots
+        %td= link_to 'Show', item
+
+%br

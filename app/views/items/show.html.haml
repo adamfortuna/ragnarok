@@ -1,0 +1,30 @@
+%p#notice= notice
+
+%p
+  %b Uid:
+  = @item.uid
+%p
+  %b Unique name:
+  = @item.unique_name
+%p
+  %b Name:
+  = @item.name
+%p
+  %b Type:
+  = @item.item_type
+%p
+  %b Subtype:
+  = @item.item_subtype
+%p
+  %b Npc price:
+  = @item.npc_price
+%p
+  %b Slots:
+  = @item.slots
+%p
+  %b Icon:
+  %img{ src: @item.icon }
+
+= link_to 'Edit', edit_item_path(@item)
+\|
+= link_to 'Back', items_path
