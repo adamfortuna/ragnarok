@@ -2,6 +2,9 @@ class Item < ApplicationRecord
   validates :uid, uniqueness: true
   validates :unique_name, uniqueness: true
 
+  has_many :shop_items
+  has_many :shops, through: :shop_items
+
   def self.sync!
     # Items
     OriginApi.items.each do |server_item|

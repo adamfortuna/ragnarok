@@ -1,0 +1,56 @@
+%p#notice= notice
+
+%p
+  %b Title:
+  = @shop.title
+%p
+  %b Username:
+  = @shop.username
+%p
+  %b Location map:
+  = @shop.location_map
+%p
+  %b Location x:
+  = @shop.location_x
+%p
+  %b Location y:
+  = @shop.location_y
+%p
+  %b Start date:
+  = @shop.start_date
+%p
+  %b Shop type:
+  = @shop.shop_type
+%p
+  %b State:
+  = @shop.state
+
+%table
+  %thead
+    %tr
+      %td
+      %td Item
+      %td Price
+
+      %td Quantity
+      %td Original Quantity
+      %td Transacted Quantity
+      %td Details
+  %tbody
+    - @shop.shop_items.includes(:item).order(price: :desc).each do |shop_item|
+      %tr
+        %td
+          %img{ src: shop_item.item.icon }
+        %td= link_to shop_item.item.name, item_path(shop_item.item)
+        %td= number_with_delimiter shop_item.price
+        %td= number_with_delimiter shop_item.quantity
+        %td= shop_item.original_quantity
+        %td= shop_item.transacted_quantity
+        %td
+          - if shop_item.cards && shop_item.cards.length > 0
+            %b Cards:
+            - Item.where(uid: shop_item.cards).each do |card|
+              = link_to card.name, item_path(card)
+
+
+= link_to 'Back', shops_path

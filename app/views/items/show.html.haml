@@ -25,6 +25,61 @@
   %b Icon:
   %img{ src: @item.icon }
 
-= link_to 'Edit', edit_item_path(@item)
-\|
+
+%h2 Selling
+- @active_items = @item.shop_items.active.vending.order(:price)
+- if @active_items.length == 0
+  %p There are no active shops selling this item.
+- else
+  %table
+    %thead
+      %tr
+        %td
+        %td Shop Name
+        %td Price
+        %td Quantity
+        %td Vendor
+        %td Location
+
+    - @active_items.each do |shop_item|
+      %tr
+        %td
+          %img{ src: shop_item.item.icon }
+        %td= link_to shop_item.shop.title, shop_path(shop_item.shop)
+        %td= number_with_delimiter shop_item.price
+        %td= number_with_delimiter shop_item.quantity
+        %td= shop_item.shop.username
+        %td= "#{shop_item.shop.location_map} (#{shop_item.shop.location_x}, #{shop_item.shop.location_y})"
+
+
+
+%h2 Buying
+- @active_items = @item.shop_items.active.buying.order(:price)
+- if @active_items.length == 0
+  %p There are no active shops buying this item.
+- else
+  %table
+    %thead
+      %tr
+        %td
+        %td Shop Name
+        %td Price
+        %td Quantity
+        %td Vendor
+        %td Location
+
+    - @active_items.each do |shop_item|
+      %tr
+        %td
+          %img{ src: shop_item.item.icon }
+        %td= link_to shop_item.shop.title, shop_path(shop_item.shop)
+        %td= number_with_delimiter shop_item.price
+        %td= number_with_delimiter shop_item.quantity
+        %td= shop_item.shop.username
+        %td= "#{shop_item.shop.location_map} (#{shop_item.shop.location_x}, #{shop_item.shop.location_y})"
+
+
+
+
+
 = link_to 'Back', items_path
