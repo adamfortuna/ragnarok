@@ -10,6 +10,10 @@ class ItemsController < ApplicationController
   def show
   end
 
+  def opportunities
+    @items = Item.opportunities
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_item

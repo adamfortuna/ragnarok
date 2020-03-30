@@ -1,0 +1,20 @@
+%h1 Market Opportunities
+
+%table
+  %thead
+    %tr
+      %th Icon
+      %th Name
+      %th Best Sale Price
+      %th Best Buy Price
+      %th Opportunity
+
+  %tbody
+    - @items.each do |item|
+      %tr
+        %td
+          %img{ src: item.icon }
+        %td= item.name
+        %td= number_with_delimiter item.best_selling_price
+        %td= number_with_delimiter item.best_buying_price
+        %td= number_with_delimiter item.market_opportunity

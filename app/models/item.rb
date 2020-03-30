@@ -5,6 +5,22 @@ class Item < ApplicationRecord
   has_many :shop_items
   has_many :shops, through: :shop_items
 
+  scope :opportunities, -> { where('best_selling_price < best_buying_price') }
+
+  def market_opportunity
+    return 0 if best_buying_price < best_selling_price
+
+    best_shop = shop_items.vending.where("price > #{best_buying_price}").first
+    best_buyer = shop_items.buying.where("price < #{best_selling_price}").first
+
+    if best_shop && best_buyer
+      available_quantity = [best_shop.quantity, best_buyer.quantity].min
+      (best_shop.price * available_quantity) - (available_quantity * best_buyer.price)
+    else
+      0
+    end
+  end
+
   def self.sync!
     # Items
     OriginApi.items.each do |server_item|
@@ -26,6 +42,13 @@ class Item < ApplicationRecord
         item.save
       end
     end
+  end
 
+  def self.best_prices!
+    Item.all.each do |item|
+      item.best_selling_price = ShopItem.vending.where(item_id: item.id).order(:price).first.try(:price)
+      item.best_buying_price = ShopItem.buying.where(item_id: item.id).order(price: :desc).first.try(:price)
+      item.save
+    end
   end
 end
