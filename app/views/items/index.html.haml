@@ -1,5 +1,10 @@
 %h1 Listing items
 
+= form_with(url: items_path, method: "get") do
+  = label_tag(:q, "Search for:")
+  = text_field_tag(:q)
+  = submit_tag("Search")
+
 %table
   %thead
     %tr
@@ -30,3 +35,5 @@
         %td= link_to 'Show', item
 
 %br
+
+= pagy_nav(@pagy).html_safe

@@ -10,15 +10,39 @@ class Item < ApplicationRecord
   def market_opportunity
     return 0 if best_buying_price < best_selling_price
 
-    best_shop = shop_items.vending.where("price > #{best_buying_price}").first
     best_buyer = shop_items.buying.where("price < #{best_selling_price}").first
+    [selling_below_market_value.sum(:quantity), buying_above_market_value.sum(:quantity)].min * best_buyer.price
+  end
 
-    if best_shop && best_buyer
-      available_quantity = [best_shop.quantity, best_buyer.quantity].min
-      (best_shop.price * available_quantity) - (available_quantity * best_buyer.price)
-    else
-      0
-    end
+  def selling_below_market_value
+    shop_items.vending.active.where(["price < ?", item.best_buying_price)
+  end
+
+  def buying_above_market_value
+    shop_items.buying.active.where(["price > ?", item.best_selling_price)
+  end
+
+  def avg_best_selling_price hours
+    hours.collect do |hour|
+      best_selling_price_at(hour.hours.ago)
+    end.compact.avg
+  end
+
+  def mean_best_selling_price hours
+    hours.collect do |hour|
+      best_selling_price_at(hour.hours.ago)
+    end.compact.mean
+  end
+
+  def best_selling_price_at time
+    best_item = ShopItem.where(item_id: item_id)
+      .join(:shop)
+      .where(["start_date >= ? AND closed_date <= ?", time, time])
+      .order(:price)
+      .limit(1)
+      .first
+
+    best_item ? best_item.price : nil
   end
 
   def self.sync!

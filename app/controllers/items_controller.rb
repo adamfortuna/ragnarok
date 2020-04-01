@@ -3,7 +3,11 @@ class ItemsController < ApplicationController
 
   # GET /items
   def index
-    @items = Item.limit(100).all
+    if params[:q]
+      @pagy, @items = pagy(Item.where(["name LIKE '%?%'", params[:q]), items: 50)
+    else
+      @pagy, @items = pagy(Item, items: 100)
+    end
   end
 
   # GET /items/1

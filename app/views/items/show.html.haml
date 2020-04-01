@@ -25,6 +25,17 @@
   %b Icon:
   %img{ src: @item.icon }
 
+%p
+  %b 7-Day Avg Avg Selling Price
+  = @item.avg_best_selling_price(7*24)
+%p
+  %b 7-Day Avg Mean Selling Price
+  = @item.mean_best_selling_price(7*24)
+
+
+%h2 Price Over Time
+.graph
+
 
 %h2 Selling
 - @active_items = @item.shop_items.active.vending.order(:price)
@@ -54,7 +65,7 @@
 
 
 %h2 Buying
-- @active_items = @item.shop_items.active.buying.order(:price)
+- @active_items = @item.shop_items.active.buying.order(price: :desc)
 - if @active_items.length == 0
   %p There are no active shops buying this item.
 - else
@@ -83,3 +94,63 @@
 
 
 = link_to 'Back', items_path
+
+
+:javascript
+  var script = document.createElement('script');
+  script.src = 'https://www.gstatic.com/charts/loader.js';
+  document.head.appendChild(script)
+  script.onload = this.loadgraph
+
+  function loadgraph() {
+    google.charts.load('current', {packages: ['corechart', 'line']});
+    google.charts.setOnLoadCallback(drawGraph);
+  }
+
+  function drawGraph() {
+    var data = new google.visualization.DataTable();
+    data.addColumn('date', 'Date');
+    data.addColumn('number', '#{@item.name}');
+
+
+
+    var chartData = [], date;
+
+    for(var i=0; i<this.fund.chart.length; i++) {
+      var date = new Date(this.fund.chart[i][0]);
+      if(this.matchData(duration, date)) {
+        chartData.push([date, this.fund.chart[i][1]])
+      }
+    }
+    data.addRows(chartData);
+
+    var dateFormat = 'yyyy'
+    if(duration == 'Y' || duration == 1 || duration == 3) {
+      dateFormat = 'M/yy'
+    }
+
+    var options = {
+      title: `Value of ${this.fund.symbol.toUpperCase()} over time`,
+      subtitle: 'in millions of dollars (USD)',
+      hAxis: {
+        title: 'Date',
+        format: dateFormat
+      },
+      vAxis: {
+        title: 'Price'
+      },
+      legend: { position: 'top' },
+      theme: 'maximized',
+      formatters: {
+        date: [
+          {
+            columnNum: 0,
+            pattern: 'YYYY-MM-DD'
+          }
+        ]
+      }
+    };
+
+    var chart = new google.visualization.LineChart(this.graphEl);
+    chart.draw(data, options);
+  }
