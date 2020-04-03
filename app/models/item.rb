@@ -97,11 +97,13 @@ class Item < ApplicationRecord
   end
 
   def avg arr
-    arr.inject(0) { |result, el| result + el } / arr.length
+    arr.length == 0 ? 0 : arr.inject(0) { |result, el| result + el } / arr.length
   end
 
   def mean arr
-    if arr.length % 2 == 0
+    if arr.length == 0
+      0
+    elsif arr.length % 2 == 0
       n = arr.length/2
       (arr[n] + arr[n+1]) / 2
     else
@@ -134,7 +136,7 @@ class Item < ApplicationRecord
   end
 
   def best_selling_price_in start_time, end_time
-    best_prices(start_time, end_time).collect { |shop_item| shop_item[:price] }.sort.first
+    best_prices(start_time, end_time).collect { |shop_item| shop_item[:price] }.sort.first || "-"
   end
 
   def best_selling_price_at time, time_range
