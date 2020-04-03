@@ -1,13 +1,13 @@
-# development:
-#   adapter: postgresql
-#   database: ragnarok_development
-#   user: adam
-#   password:
-
 development:
   adapter: postgresql
-  database: dahb8h8ajv689r
-  user: thjklktydddpun
-  password: 2ccc7d056920fe99139c0ac2b0e8a17b4e1bf952132dd2ee38855a0d1615c2d0
-  host: ec2-23-22-156-110.compute-1.amazonaws.com
-  port: 5432
+  database: ragnarok_development
+  user: adam
+  password:
+
+# development:
+#   adapter: postgresql
+#   database: dahb8h8ajv689r
+#   user: thjklktydddpun
+#   password: 2ccc7d056920fe99139c0ac2b0e8a17b4e1bf952132dd2ee38855a0d1615c2d0
+#   host: ec2-23-22-156-110.compute-1.amazonaws.com
+#   port: 5432

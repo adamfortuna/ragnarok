@@ -1,12 +1,14 @@
 class ItemsController < ApplicationController
   before_action :set_item, only: [:show, :edit, :update, :destroy]
 
+  include Pagy::Backend
+
   # GET /items
   def index
     if params[:q]
-      @pagy, @items = pagy(Item.where(["name LIKE '%?%'", params[:q]), items: 50)
+      @pagy, @items = pagy(Item.ransack(name_cont: params[:q]).result(distinct: true), items: 50)
     else
-      @pagy, @items = pagy(Item, items: 100)
+      @pagy, @items = pagy(Item.order(:name), items: 100)
     end
   end
 

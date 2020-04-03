@@ -1,20 +1,18 @@
 %p#notice= notice
 
 %p
+  %b Name:
+  = @item.name_with_slots
+
+%p
   %b Uid:
   = @item.uid
 %p
-  %b Unique name:
-  = @item.unique_name
-%p
-  %b Name:
-  = @item.name
-%p
   %b Type:
-  = @item.item_type
+  = @item.nice_item_type
 %p
   %b Subtype:
-  = @item.item_subtype
+  = @item.nice_item_subtype
 %p
   %b Npc price:
   = @item.npc_price
@@ -27,14 +25,24 @@
 
 %p
   %b 7-Day Avg Avg Selling Price
-  = @item.avg_best_selling_price(7*24)
+  = number_with_delimiter @item.avg_best_selling_price(24*7)
 %p
   %b 7-Day Avg Mean Selling Price
-  = @item.mean_best_selling_price(7*24)
+  = number_with_delimiter @item.mean_best_selling_price(24*7)
 
 
 %h2 Price Over Time
-.graph
+%table
+  %tr
+    %th Date
+    %th Best Price
+    %th Availability
+  - (0..10).to_a.each do |i|
+    - day_start = i.days.ago.beginning_of_day
+    %tr
+      %td= day_start.strftime("%B %-d, %Y")
+      %td= number_with_delimiter @item.best_selling_price_in(day_start, day_start.end_of_day)
+      %td= number_to_percentage @item.availability(day_start, day_start.end_of_day), precision: 0
 
 
 %h2 Selling
@@ -89,68 +97,4 @@
         %td= shop_item.shop.username
         %td= "#{shop_item.shop.location_map} (#{shop_item.shop.location_x}, #{shop_item.shop.location_y})"
 
-
-
-
-
 = link_to 'Back', items_path
-
-
-:javascript
-  var script = document.createElement('script');
-  script.src = 'https://www.gstatic.com/charts/loader.js';
-  document.head.appendChild(script)
-  script.onload = this.loadgraph
-
-  function loadgraph() {
-    google.charts.load('current', {packages: ['corechart', 'line']});
-    google.charts.setOnLoadCallback(drawGraph);
-  }
-
-  function drawGraph() {
-    var data = new google.visualization.DataTable();
-    data.addColumn('date', 'Date');
-    data.addColumn('number', '#{@item.name}');
-
-
-
-    var chartData = [], date;
-
-    for(var i=0; i<this.fund.chart.length; i++) {
-      var date = new Date(this.fund.chart[i][0]);
-      if(this.matchData(duration, date)) {
-        chartData.push([date, this.fund.chart[i][1]])
-      }
-    }
-    data.addRows(chartData);
-
-    var dateFormat = 'yyyy'
-    if(duration == 'Y' || duration == 1 || duration == 3) {
-      dateFormat = 'M/yy'
-    }
-
-    var options = {
-      title: `Value of ${this.fund.symbol.toUpperCase()} over time`,
-      subtitle: 'in millions of dollars (USD)',
-      hAxis: {
-        title: 'Date',
-        format: dateFormat
-      },
-      vAxis: {
-        title: 'Price'
-      },
-      legend: { position: 'top' },
-      theme: 'maximized',
-      formatters: {
-        date: [
-          {
-            columnNum: 0,
-            pattern: 'YYYY-MM-DD'
-          }
-        ]
-      }
-    };
-
-    var chart = new google.visualization.LineChart(this.graphEl);
-    chart.draw(data, options);
-  }

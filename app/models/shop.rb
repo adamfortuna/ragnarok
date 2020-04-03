@@ -70,6 +70,7 @@ class Shop < ApplicationRecord
     Shop.updating.each do |shop|
       shop.shop_items.active.update_all "state='Unsold'"
     end
-    Shop.updating.update_all ["state='Closed' AND closed_date=?", Time.now]
+    Shop.updating.update_all ["closed_date=?", Time.now]
+    Shop.updating.update_all "state='Closed'"
   end
 end
