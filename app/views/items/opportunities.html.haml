@@ -7,7 +7,7 @@
       %th Name
       %th Best Sale Price
       %th Best Buy Price
-      %th Opportunity
+      -# %th Opportunity
       %th Good/Bad Ratio
 
   %tbody
@@ -18,7 +18,7 @@
         %td= link_to item.name, item
         %td= number_with_delimiter item.best_selling_price
         %td= number_with_delimiter item.best_buying_price
-        %td= number_with_delimiter item.market_opportunity
+        -# %td= number_with_delimiter item.market_opportunity
         %td
           = item.selling_below_market_value.sum(:quantity)
           = "/"

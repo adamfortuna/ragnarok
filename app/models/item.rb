@@ -72,16 +72,19 @@ class Item < ApplicationRecord
   def market_opportunity
     return 0 if best_buying_price < best_selling_price
 
-    best_buyer = shop_items.buying.where("price < #{best_selling_price}").first
-    [selling_below_market_value.sum(:quantity), buying_above_market_value.sum(:quantity)].min * best_buyer.price
+    if best_buyer = shop_items.buying.where("price < #{best_selling_price}").first
+      [selling_below_market_value.sum(:quantity), buying_above_market_value.sum(:quantity)].min * best_buyer.price
+    else
+      0
+    end
   end
 
   def selling_below_market_value
-    shop_items.vending.active.where(["price < ?", item.best_buying_price])
+    shop_items.vending.active.where(["price < ?", best_buying_price])
   end
 
   def buying_above_market_value
-    shop_items.buying.active.where(["price > ?", item.best_selling_price])
+    shop_items.buying.active.where(["price > ?", best_selling_price])
   end
 
   def avg_best_selling_price hours
