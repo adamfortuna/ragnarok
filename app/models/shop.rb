@@ -9,6 +9,13 @@ class Shop < ApplicationRecord
   scope :vending, -> { where(shop_type: 'V') }
   scope :buying, -> { where(shop_type: 'B') }
 
+  def open?
+    state == 'Open'
+  end
+  def closed?
+    state == 'Closed'
+  end
+
   def nice_shop_type
     shop_type == 'V' ? 'Vendor' : 'Buyer'
   end
@@ -63,7 +70,8 @@ class Shop < ApplicationRecord
             shop_item.update_attributes({
               transacted_quantity: shop_item.original_quantity,
               quantity: 0,
-              state: 'Sold'
+              state: 'Sold',
+              sold_at: Time.now
             })
           end
 

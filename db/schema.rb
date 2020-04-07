@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_03_175854) do
+ActiveRecord::Schema.define(version: 2020_04_07_224042) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(version: 2020_04_03_175854) do
     t.integer "original_quantity"
     t.integer "transacted_quantity"
     t.integer "cards", array: true
+    t.datetime "sold_at"
     t.index ["cards"], name: "index_shop_items_on_cards", using: :gin
     t.index ["item_id"], name: "index_shop_items_on_item_id"
     t.index ["shop_id"], name: "index_shop_items_on_shop_id"
