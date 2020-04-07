@@ -54,6 +54,10 @@ class Item < ApplicationRecord
 
   scope :opportunities, -> { where('best_selling_price < best_buying_price') }
 
+  def card?
+    item_type == 'IT_CARD'
+  end
+
   def nice_item_type
     ITEM_TYPES[item_type.to_sym] if item_type
   end
@@ -116,7 +120,9 @@ class Item < ApplicationRecord
     key = [start_time, end_time].join(',')
     @best_prices[key] = @best_prices[key] || ShopItem.where(item_id: id)
       .joins(:shop)
-      .where(["start_date < ? AND (closed_date >= ? OR closed_date IS NULL)", start_time, end_time])
+      .where(["start_date < ? AND (closed_date IS NULL OR closed_date > ?)", end_time, start_time])
+      .where(refine: nil)
+      .where(cards: nil)
       .includes(:shop)
       .collect { |shop_item| {
         closed_date: shop_item.shop.closed_date,

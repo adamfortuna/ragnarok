@@ -1,48 +1,25 @@
 class ShopsController < ApplicationController
-  before_action :set_shop, only: [:show, :edit, :update, :destroy]
+  before_action :set_shop, only: [:show]
+
+  include Pagy::Backend
 
   # GET /shops
   def index
-    @shops = Shop.all
+    @pagy, @shops = pagy(Shop.open.order(start_date: :desc), items: 200)
+  end
+
+  def vending
+    @pagy, @shops = pagy(Shop.open.vending.order(start_date: :desc), items: 200)
+    render :index
+  end
+
+  def buying
+    @pagy, @shops = pagy(Shop.open.buying.order(start_date: :desc), items: 200)
+    render :index
   end
 
   # GET /shops/1
   def show
-  end
-
-  # GET /shops/new
-  def new
-    @shop = Shop.new
-  end
-
-  # GET /shops/1/edit
-  def edit
-  end
-
-  # POST /shops
-  def create
-    @shop = Shop.new(shop_params)
-
-    if @shop.save
-      redirect_to @shop, notice: 'Shop was successfully created.'
-    else
-      render :new
-    end
-  end
-
-  # PATCH/PUT /shops/1
-  def update
-    if @shop.update(shop_params)
-      redirect_to @shop, notice: 'Shop was successfully updated.'
-    else
-      render :edit
-    end
-  end
-
-  # DELETE /shops/1
-  def destroy
-    @shop.destroy
-    redirect_to shops_url, notice: 'Shop was successfully destroyed.'
   end
 
   private

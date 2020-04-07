@@ -41,7 +41,7 @@
       %tr
         %td
           %img{ src: shop_item.item.icon }
-        %td= link_to shop_item.item.name, item_path(shop_item.item)
+        %td= link_to shop_item.item.name_with_slots, item_path(shop_item.item)
         %td= number_with_delimiter shop_item.price
         %td= number_with_delimiter shop_item.quantity
         %td= shop_item.original_quantity

@@ -15,7 +15,7 @@
   = @item.nice_item_subtype
 %p
   %b Npc price:
-  = @item.npc_price
+  = number_with_delimiter @item.npc_price
 %p
   %b Slots:
   = @item.slots
@@ -53,12 +53,13 @@
   %table
     %thead
       %tr
-        %td
-        %td Shop Name
-        %td Price
-        %td Quantity
-        %td Vendor
-        %td Location
+        %th
+        %th Shop Name
+        %th Price
+        %th Quantity
+        %th Vendor
+        %th Location
+        %th Cards
 
     - @active_items.each do |shop_item|
       %tr
@@ -67,9 +68,44 @@
         %td= link_to shop_item.shop.title, shop_path(shop_item.shop)
         %td= number_with_delimiter shop_item.price
         %td= number_with_delimiter shop_item.quantity
-        %td= shop_item.shop.username
+        %td= link_to shop_item.shop.username, shop_item.shop
         %td= "#{shop_item.shop.location_map} (#{shop_item.shop.location_x}, #{shop_item.shop.location_y})"
+        %td
+          - if shop_item.cards && shop_item.cards.length > 0
+            %ul
+              - Item.where(uid: shop_item.cards).each do |card|
+                %li= link_to card.name, item_path(card)
 
+- if @item.card?
+  %h2 Selling (Already slotted)
+  - @active_slotted_items = ShopItem.active.vending.order(:price).where("? = ANY(cards)", @item.uid)
+  - if @active_slotted_items.length == 0
+    %p There are no active shops selling this card already slotted at this time
+  - else
+    %table
+      %thead
+        %tr
+          %th
+          %th Shop Name
+          %th Price
+          %th Quantity
+          %th Vendor
+          %th Location
+          %th Cards
+      - @active_slotted_items.each do |shop_item|
+        %tr
+          %td
+            %img{ src: shop_item.item.icon }
+          %td= link_to shop_item.shop.title, shop_item.shop
+          %td= number_with_delimiter shop_item.price
+          %td= number_with_delimiter shop_item.quantity
+          %td= link_to shop_item.shop.username, shop_path(shop_item.shop)
+          %td= "#{shop_item.shop.location_map} (#{shop_item.shop.location_x}, #{shop_item.shop.location_y})"
+          %td
+            - if shop_item.cards && shop_item.cards.length > 0
+              %ul
+                - Item.where(uid: shop_item.cards).each do |card|
+                  %li= link_to card.name, item_path(card)
 
 
 %h2 Buying
@@ -80,12 +116,12 @@
   %table
     %thead
       %tr
-        %td
-        %td Shop Name
-        %td Price
-        %td Quantity
-        %td Vendor
-        %td Location
+        %th
+        %th Shop Name
+        %th Price
+        %th Quantity
+        %th Vendor
+        %th Location
 
     - @active_items.each do |shop_item|
       %tr
@@ -94,7 +130,7 @@
         %td= link_to shop_item.shop.title, shop_path(shop_item.shop)
         %td= number_with_delimiter shop_item.price
         %td= number_with_delimiter shop_item.quantity
-        %td= shop_item.shop.username
+        %td= link_to shop_item.shop.username, shop_item.shop
         %td= "#{shop_item.shop.location_map} (#{shop_item.shop.location_x}, #{shop_item.shop.location_y})"
 
 = link_to 'Back', items_path

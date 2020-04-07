@@ -3,33 +3,25 @@
 %table
   %thead
     %tr
-      %th Title
-      %th Username
-      %th Location map
-      %th Location x
-      %th Location y
-      %th Start date
       %th Shop type
-      %th State
-      %th
-      %th
-      %th
+      %th Title
+      %th Location
+      %th Open Date
+      %th When?
 
   %tbody
     - @shops.each do |shop|
       %tr
-        %td= shop.title
-        %td= shop.username
-        %td= shop.location_map
-        %td= shop.location_x
-        %td= shop.location_y
-        %td= shop.start_date
-        %td= shop.shop_type
-        %td= shop.state
-        %td= link_to 'Show', shop
-        %td= link_to 'Edit', edit_shop_path(shop)
-        %td= link_to 'Destroy', shop, method: :delete, data: { confirm: 'Are you sure?' }
+        %td= shop.nice_shop_type
+        %td
+          = link_to shop.title, shop
+          by
+          = shop.username
+        %td= "#{shop.location_map} (#{shop.location_x}, #{shop.location_y})"
+        %td
+          = shop.start_date.strftime("%Y.%d.%m @ %H:%M:%S")
+        %td= time_ago_in_words shop.start_date
 
 %br
 
-= link_to 'New Shop', new_shop_path
+= pagy_nav(@pagy).html_safe

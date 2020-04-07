@@ -6,6 +6,13 @@ class Shop < ApplicationRecord
   scope :updating, -> { where(state: 'Updating') }
   scope :closed, -> { where(state: 'Closed') }
 
+  scope :vending, -> { where(shop_type: 'V') }
+  scope :buying, -> { where(shop_type: 'B') }
+
+  def nice_shop_type
+    shop_type == 'V' ? 'Vendor' : 'Buyer'
+  end
+
   def self.sync!
     # Mark all open shops as currently updating
     Shop.open.update_all "state='Updating'"
