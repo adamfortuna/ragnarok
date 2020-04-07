@@ -116,7 +116,7 @@ class Item < ApplicationRecord
     key = [start_time, end_time].join(',')
     @best_prices[key] = @best_prices[key] || ShopItem.where(item_id: id)
       .joins(:shop)
-      .where(["closed_date >= ? OR closed_date IS NULL", start_time])
+      .where(["start_date < ? AND (closed_date >= ? OR closed_date IS NULL)", start_time, end_time])
       .includes(:shop)
       .collect { |shop_item| {
         closed_date: shop_item.shop.closed_date,
