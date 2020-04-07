@@ -54,7 +54,8 @@
     %thead
       %tr
         %th
-        %th Shop Name
+        %th Item
+        %th Shop
         %th Price
         %th Quantity
         %th Vendor
@@ -65,6 +66,7 @@
       %tr
         %td
           %img{ src: shop_item.item.icon }
+        %td= shop_item.full_name
         %td= link_to shop_item.shop.title, shop_path(shop_item.shop)
         %td= number_with_delimiter shop_item.price
         %td= number_with_delimiter shop_item.quantity

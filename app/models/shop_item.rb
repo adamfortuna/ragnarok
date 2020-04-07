@@ -8,4 +8,12 @@ class ShopItem < ApplicationRecord
 
   scope :vending, -> { joins(:shop).where(shops: { shop_type: 'V'}).includes(:shop) }
   scope :buying, -> { joins(:shop).where(shops: { shop_type: 'B'}).includes(:shop) }
+
+  def full_name
+    parts = []
+    parts << forger if forger
+    parts << "+#{refine}" if refine
+    parts << item.name_with_slots
+    parts.compact.join(' ')
+  end
 end
