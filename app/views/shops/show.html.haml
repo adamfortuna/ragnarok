@@ -35,22 +35,22 @@
       %td Quantity
       %td Original Quantity
       %td Transacted Quantity
-      %td Details
+      %td Cards
   %tbody
     - @shop.shop_items.includes(:item).order(price: :desc).each do |shop_item|
       %tr
         %td
           %img{ src: shop_item.item.icon }
-        %td= link_to shop_item.item.name_with_slots, item_path(shop_item.item)
+        %td= link_to shop_item.full_name, item_path(shop_item.item)
         %td= number_with_delimiter shop_item.price
         %td= number_with_delimiter shop_item.quantity
         %td= shop_item.original_quantity
         %td= shop_item.transacted_quantity
         %td
           - if shop_item.cards && shop_item.cards.length > 0
-            %b Cards:
+            %ul
             - Item.where(uid: shop_item.cards).each do |card|
-              = link_to card.name, item_path(card)
+              %li= link_to card.name, item_path(card)
 
 
 = link_to 'Back', shops_path
