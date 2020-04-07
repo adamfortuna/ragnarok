@@ -121,6 +121,7 @@
         %th Item
         %th Price
         %th Date Sold
+        %th Cards
     - @recently_sold.each do |shop_item|
       %tr
         %td
@@ -128,6 +129,11 @@
         %td= link_to shop_item.full_name, shop_item.item
         %td= number_with_delimiter shop_item.price
         %td= time_ago_in_words shop_item.sold_at
+        %td
+          - if shop_item.cards && shop_item.cards.length > 0
+            %ul
+              - Item.where(uid: shop_item.cards).each do |card|
+                %li= link_to card.name, item_path(card)
 
 
 
