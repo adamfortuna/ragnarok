@@ -110,7 +110,7 @@
                   %li= link_to card.name, item_path(card)
 
 %h2 Recently Sold
-- @recently_sold = ShopItem.sold.includes(:item).where(item_id: @item.id).limit(50).where('sold_at IS NOT NULL').order(sold_at: :desc)
+- @recently_sold = ShopItem.sold.includes(:item).where(item_id: @item.id).limit(50).order(sold_at: :desc)
 - if @recently_sold.length == 0
   %p There are no recent sales of this item on the market.
 - else
@@ -125,7 +125,7 @@
       %tr
         %td
           %img{ src: shop_item.item.icon }
-        %td= link_to shop_item.full_name, shop.item
+        %td= link_to shop_item.full_name, shop_item.item
         %td= number_with_delimiter shop_item.price
         %td= time_ago_in_words shop_item.sold_at
 
