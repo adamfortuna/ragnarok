@@ -3,5 +3,9 @@ module.exports = {
     container: {
       center: true
     }
-  }
+  },
+
+  purge: [
+    '../../views/**/*.haml'
+  ],
 }
