@@ -6,6 +6,6 @@ module.exports = {
   },
 
   purge: [
-    '../../views/**/*.haml'
+    './app/views/**/*.haml'
   ],
 }
