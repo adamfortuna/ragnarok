@@ -13,9 +13,9 @@ gem 'ransack' # Search
 gem 'puma', '~> 4.1'
 
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
+gem 'webpacker', '~> 5.1.1'
 gem 'sass-rails', '>= 6'
 gem 'haml-rails', '~> 2.0'
-gem 'webpacker', '~> 4.0'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false

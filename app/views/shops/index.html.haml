@@ -1,27 +1,33 @@
-%h1 Listing shops
+.container.flex
+  .card{ class: 'w-3/4' }
+    %h1 Listing shops
 
-%table
-  %thead
-    %tr
-      %th Shop type
-      %th Title
-      %th Location
-      %th Open Date
-      %th When?
+    %table
+      %thead
+        %tr
+          %th Shop type
+          %th Title
+          %th Location
+          %th Open Date
+          %th When?
 
-  %tbody
-    - @shops.each do |shop|
-      %tr
-        %td= shop.nice_shop_type
-        %td
-          = link_to shop.title, shop
-          by
-          = shop.username
-        %td= "#{shop.location_map} (#{shop.location_x}, #{shop.location_y})"
-        %td
-          = shop.start_date.strftime("%Y.%d.%m @ %H:%M:%S")
-        %td= time_ago_in_words shop.start_date
+      %tbody
+        - @shops.each do |shop|
+          %tr
+            %td= shop.nice_shop_type
+            %td
+              = link_to shop.title, shop
+              by
+              = shop.username
+            %td= "#{shop.location_map} (#{shop.location_x}, #{shop.location_y})"
+            %td
+              = shop.start_date.strftime("%Y.%d.%m @ %H:%M:%S")
+            %td= time_ago_in_words shop.start_date
 
-%br
+    %br
 
-= pagy_nav(@pagy).html_safe
+    = pagy_nav(@pagy).html_safe
+
+  .ml-8{ class: 'w-1/4' }
+    .card
+      Something

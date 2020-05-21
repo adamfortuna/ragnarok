@@ -17,6 +17,7 @@ module.exports = function(api) {
 
   return {
     presets: [
+      // [ "es2015", { "modules": false } ],
       isTestEnv && [
         '@babel/preset-env',
         {
